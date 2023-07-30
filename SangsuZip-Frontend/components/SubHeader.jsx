@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Switch, Text, View } from "react-native";
-import { Black } from "../style/color";
+import { Black, Blue, LightGray } from "../style/color";
 
 const SubHeader = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const toggleSwitch = () => {
+    setIsLoggedIn(!isLoggedIn);
+  };
   return (
     <View style={styles.subheader}>
       <Text style={styles.text}>알림</Text>
-      <Switch style={styles.switch} />
+      <Switch
+        trackColor={{ false: "#ffffff", true: `${Blue}` }}
+        thumbColor={isLoggedIn ? "#fff" : `${LightGray}`}
+        ios_backgroundColor={isLoggedIn ? `${Blue}` : `${LightGray}`}
+        style={styles.switch}
+        onValueChange={toggleSwitch}
+        value={isLoggedIn}
+      />
     </View>
   );
 };
