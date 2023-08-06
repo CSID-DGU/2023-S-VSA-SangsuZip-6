@@ -10,14 +10,12 @@ import Checkbox from "expo-checkbox";
 import { useState } from "react";
 import { Blue, DarkGray, LightGray } from "../style/color";
 
-const Item = () => {
+const Item = ({ category, adminName, date }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [isModal, setIsModal] = useState(false);
-
   const modalHandler = () => {
     setIsModal(!isModal);
   };
-
   return (
     <TouchableOpacity onPress={modalHandler}>
       <View style={styles.itemView}>
@@ -40,8 +38,15 @@ const Item = () => {
           <View style={styles.centerView}>
             <Pressable onPress={() => setIsModal(!isModal)}>
               <View style={styles.modalView}>
-                <Text>이상 사항 세부 내용</Text>
-                <Text>관리자 : {}</Text>
+                <Text style={styles.category}>
+                  이상행동 카테고리: {category}
+                </Text>
+                <Text style={styles.date}>{date}</Text>
+                {adminName === null ? (
+                  <></>
+                ) : (
+                  <Text style={styles.admin}>관리자 : {adminName}</Text>
+                )}
               </View>
             </Pressable>
           </View>
@@ -82,7 +87,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    padding: 100,
+    padding: 80,
     backgroundColor: "white",
     borderRadius: 5,
     alignItems: "center",
@@ -94,6 +99,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    gap: 20,
+  },
+  category: {
+    fontSize: 18,
+    fontWeight: "700",
+  },
+  date: {
+    fontSize: 14,
+  },
+  admin: {
+    fontSize: 14,
   },
 });
 
