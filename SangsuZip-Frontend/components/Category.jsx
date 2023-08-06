@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Button } from "./Button";
 import { LightGray } from "../style/color";
 
-const Category = () => {
+const Category = ({ isChecked, setIsChecked }) => {
   const [isSelected, setIsSelected] = useState([true, false]);
   const buttonList = ["미확인", "확인"];
 
@@ -11,6 +11,7 @@ const Category = () => {
     const selectedArr = Array(buttonList.length).fill(false);
     selectedArr[idx] = true;
     setIsSelected(selectedArr);
+    setIsChecked(Boolean(idx));
   };
   return (
     <View style={styles.category}>
