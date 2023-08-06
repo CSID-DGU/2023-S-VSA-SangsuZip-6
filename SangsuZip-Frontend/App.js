@@ -1,54 +1,27 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import Item from "./components/Item";
-import Header from "./components/Header";
-import SubHeader from "./components/SubHeader";
-import Category from "./components/Category";
-import ConfirmButton from "./components/ConfirmButton";
+import { NavigationContainer } from "@react-navigation/native";
+import OnBoarding from "./pages/OnBoarding";
+import AlertPage from "./pages/AlertPage";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-      <Header style={styles.header} />
-      <View style={styles.subheader}>
-        <SubHeader />
-        <Category />
-      </View>
-      <View style={styles.body}>
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-      </View>
-      <View style={styles.footer}>
-        <ConfirmButton />
-      </View>
-      {/* <StatusBar style="auto" /> */}
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="OnBoarding">
+        <Stack.Screen
+          name="OnBoarding"
+          component={OnBoarding}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Alert"
+          component={AlertPage}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  header: {
-    flex: 1,
-  },
-  subheader: {
-    flex: 2,
-  },
-  body: {
-    alignItems: "center",
-  },
-  footer: {
-    flex: 1,
-    alignItems: "center",
-    marginTop: 20,
-  },
-});

@@ -1,11 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { LightGray } from "../style/color";
 
 const Header = () => {
   return (
     <View style={styles.header}>
-        {/* 이미지나 앱 이름 정해지면 변경 */}
-      <Text></Text>
+      <Image source={require("../assets/icon/logo.png")} style={styles.logo} />
     </View>
   );
 };
@@ -18,6 +17,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderBottomWidth: 1,
     borderBottomColor: `${LightGray}`,
+  },
+  logo: {
+    width: "30%",
+    height: "50%",
+    objectFit: "fill",
   },
 });
 
