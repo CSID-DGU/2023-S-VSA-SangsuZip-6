@@ -25,7 +25,7 @@ const styles = (isSelected) =>
       borderColor: isSelected ? "#3386FF" : "#D4D8DE",
     },
     text: {
-      fontSize: "16px",
+      fontSize: 16,
       color: isSelected ? "#3386FF" : "#D4D8DE",
     },
   });
