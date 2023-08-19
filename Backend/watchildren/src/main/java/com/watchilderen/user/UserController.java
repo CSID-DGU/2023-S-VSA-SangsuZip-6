@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 
 @RestController
@@ -21,22 +22,18 @@ public class UserController {
 
     @PostMapping("/signup")
     public CommonResult signup (@RequestBody @Valid User user) throws Exception {
-        String result = userService.insertUser(user);
-        if (result == null)
-            return new CommonResult(500, "Failed Insert User Info");
-        return new CommonResult(200, "Succeed Insert User Info");
+        Long id = userService.saveUser(user);
+        return responseService.getSingleResult(String.valueOf(id), 200, "Succeed Insert User Info");
     }
 
-    @GetMapping("/signin")
+    @PostMapping("/signin")
     public SingleResult<String> signin (@RequestBody @Valid LoginUserRequest request) throws Exception{
-        String id = request.getId();
-        User user = userService.getUser(id);
-        if(user != null && user.getPw().equals(request.getPw())){
+        Long id = request.getId();
+        Optional<User> user = userService.findById(id);
+        if(user.get().getPw().equals(request.getPw())){
             return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(id)),200,"Login Succeed");
-        }
-        if(user == null)
-            return responseService.getSingleResult("None",403,"Login Failed (Not Found ID)");
-        return responseService.getSingleResult(user.getId(),403,"Login Failed (Not equal Password)");
+        }else if(request.getId().equals(user.get().getId())) return responseService.getSingleResult("None",403,"Login Failed (Not Found ID)");
+        else return responseService.getSingleResult(user.get().getId().toString(),403,"Login Failed (Not equal Password)");
     }
 
 
