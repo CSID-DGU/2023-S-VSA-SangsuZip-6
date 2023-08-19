@@ -31,7 +31,6 @@ public class UserController {
     public SingleResult<String> signin (@RequestBody @Valid LoginUserRequest request) throws Exception{
         String id = request.getId();
         User user = userService.getUser(id);
-
         if(user != null && user.getPw().equals(request.getPw())){
             return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(id)),200,"Login Succeed");
         }
