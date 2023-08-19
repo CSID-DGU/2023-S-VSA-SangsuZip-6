@@ -5,8 +5,8 @@ import splash_logo from "../assets/icon/splash_logo.png";
 function OnBoarding({ navigation }) {
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate("Alert");
-    }, 5000);
+      navigation.navigate("Login");
+    }, 2000);
   }, []);
 
   return (
