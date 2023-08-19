@@ -1,14 +1,15 @@
 package com.watchilderen.user;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -16,8 +17,6 @@ public class UserServiceImpl implements UserService{
     @Override
     public String insertUser(User user) throws Exception{
         Firestore firestore = FirestoreClient.getFirestore();
-        user.setCreate_dt(LocalDateTime.now());
-        user.setUpdate_dt(LocalDateTime.now());
         ApiFuture<WriteResult> apiFuture = firestore.collection(COLLECTION_NAME).document(user.getId()).set(user);
         return apiFuture.get().getUpdateTime().toString();
     }
@@ -40,5 +39,25 @@ public class UserServiceImpl implements UserService{
         DocumentSnapshot ds = apiFuture.get();
         if(ds.exists()) return ds.toObject(User.class).getDeviceToken();
         else return null;
+    }
+
+    @Override
+    public List<String> getAllDeviceTokens() throws Exception {
+        Firestore firestore = FirestoreClient.getFirestore();
+        CollectionReference usersCollection = firestore.collection(COLLECTION_NAME);
+
+        List<String> deviceTokens = new ArrayList<>();
+
+        ApiFuture<QuerySnapshot> future = usersCollection.get();
+        List<QueryDocumentSnapshot> documents = future.get(10, TimeUnit.SECONDS).getDocuments();
+
+        for (QueryDocumentSnapshot document : documents) {
+            if (document.contains("deviceToken")) {
+                String deviceToken = document.getString("deviceToken");
+                deviceTokens.add(deviceToken);
+            }
+        }
+
+        return deviceTokens;
     }
 }
