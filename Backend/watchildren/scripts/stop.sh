@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PROJECT_ROOT="/home/ubuntu/" #코드가 주입되는 경로
+PROJECT_ROOT="/home/ubuntu/build" #코드가 주입되는 경로
 JAR_FILE="$PROJECT_ROOT/watchildren.jar" #build.gradle에서 설정한 파일명으로 변경
 
 DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
