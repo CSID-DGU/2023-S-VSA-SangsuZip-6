@@ -1,17 +1,31 @@
 package com.watchilderen.user;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="user")
+@Getter @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
-    private String id;
+    @Id
+    @Column(name="id")
+    private Long id;
+
+    @Column(name="pw")
     private String pw;
+
+    @Column(name="name")
     private String name;
+
+    @Column(name="deviceToken")
     private String deviceToken;
 
 }
