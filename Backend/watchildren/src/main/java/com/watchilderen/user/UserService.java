@@ -12,12 +12,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Long saveUser (User user){
+    public String saveUser (User user){
         userRepository.save(user);
         return user.getId();
     }
 
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(String id) {
         Optional<User> user = userRepository.findById(id);
         return user;
     }

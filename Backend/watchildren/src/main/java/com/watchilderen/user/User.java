@@ -17,7 +17,7 @@ public class User {
 
     @Id
     @Column(name="id")
-    private Long id;
+    private String id;
 
     @Column(name="pw")
     private String pw;
