@@ -22,13 +22,13 @@ public class UserController {
 
     @PostMapping("/signup")
     public CommonResult signup (@RequestBody @Valid User user) throws Exception {
-        Long id = userService.saveUser(user);
+        String id = userService.saveUser(user);
         return responseService.getSingleResult(String.valueOf(id), 200, "Succeed Insert User Info");
     }
 
     @PostMapping("/signin")
     public SingleResult<String> signin (@RequestBody @Valid LoginUserRequest request) throws Exception{
-        Long id = request.getId();
+        String id = request.getId();
         Optional<User> user = userService.findById(id);
         if(user.get().getPw().equals(request.getPw())){
             return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(id)),200,"Login Succeed");
