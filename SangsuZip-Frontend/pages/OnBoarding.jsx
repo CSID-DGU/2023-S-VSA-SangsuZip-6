@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import splash_logo from "../assets/icon/splash_logo.png";
+import { Image, StyleSheet, View } from "react-native";
 
 function OnBoarding({ navigation }) {
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate("Alert");
-    }, 5000);
+      navigation.navigate("Login");
+    }, 2000);
   }, []);
 
   return (

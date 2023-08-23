@@ -1,12 +1,16 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Blue, LightGray } from "../style/color";
+import { Blue } from "../style/color";
 
-const ConfirmButton = () => {
-  // isChecked: false -> true
-  // adminName: null -> string 으로 만드는 API 추가 후 onPress에 추가
+const ConfirmButton = ({ selectedIds, updateDataIsChecked }) => {
+  const handleConfirm = () => {
+    selectedIds.forEach((id) => {
+      updateDataIsChecked(id);
+    });
+  };
+
   return (
-    <Pressable onPress={() => alert("확인으로 넘기기")}>
+    <Pressable onPress={handleConfirm}>
       <View style={styles.button}>
         <Text style={styles.text}>확인</Text>
       </View>

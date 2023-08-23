@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import SubHeader from "../components/SubHeader";
 import Category from "../components/Category";
@@ -7,62 +7,37 @@ import ConfirmButton from "../components/ConfirmButton";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 
 function AlertPage() {
-  const datas = {
-    data: [
-      {
-        id: "1",
-        category: "낙상",
-        date: "2012. 12. 20. 오후 12:00:00",
-        isChecked: false,
-        adminName: null,
-      },
-      {
-        id: "2",
-        category: "낙상",
-        date: "2012. 12. 20. 오후 12:00:00",
-        isChecked: false,
-        adminName: null,
-      },
-      {
-        id: "3",
-        category: "낙상",
-        date: "2012. 12. 20. 오후 12:00:00",
-        isChecked: true,
-        adminName: "김태욱",
-      },
-      {
-        id: "4",
-        category: "낙상",
-        date: "2012. 12. 20. 오후 12:00:00",
-        isChecked: true,
-        adminName: "박광렬",
-      },
-      {
-        id: "5",
-        category: "낙상",
-        date: "2012. 12. 20. 오후 12:00:00",
-        isChecked: true,
-        adminName: "정관희",
-      },
-      {
-        id: "5",
-        category: "낙상",
-        date: "2012. 12. 20. 오후 12:00:00",
-        isChecked: true,
-        adminName: "정원호",
-      },
-    ],
-  };
-
   const [isChecked, setIsChecked] = useState(false);
   const [abnormalDatas, setAbnormalDatas] = useState();
+  const [isSelected, setIsSelected] = useState([]);
 
   useEffect(() => {
     const filteredAbnormalDatas = datas.data.filter(
       (data) => data.isChecked === isChecked
     );
     setAbnormalDatas(filteredAbnormalDatas);
-  }, [isChecked]);
+  }, [isChecked, datas]);
+
+  const updateSelected = (itemId) => {
+    if (!isSelected.includes(itemId)) {
+      setIsSelected((prevSelected) => [...prevSelected, itemId]);
+    } else {
+      setIsSelected((prevSelected) =>
+        prevSelected.filter((selectedId) => selectedId !== itemId)
+      );
+    }
+  };
+
+  const updateDataIsChecked = (selectedId) => {
+    const updatedData = datas.data.map((data) => {
+      if (data.id === selectedId) {
+        return { ...data, isChecked: true };
+      }
+      return data;
+    });
+
+    setDatas({ ...datas, data: updatedData });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -74,11 +49,20 @@ function AlertPage() {
       <View style={styles.body}>
         {abnormalDatas &&
           abnormalDatas.map((abnormalData, index) => (
-            <Item key={index} {...abnormalData} />
+            <Item
+              id={abnormalData.id}
+              key={index}
+              updateSelected={updateSelected}
+              datas={datas}
+              {...abnormalData}
+            />
           ))}
       </View>
       <View style={styles.footer}>
-        <ConfirmButton />
+        <ConfirmButton
+          selectedIds={isSelected}
+          updateDataIsChecked={updateDataIsChecked}
+        />
       </View>
     </SafeAreaView>
   );
