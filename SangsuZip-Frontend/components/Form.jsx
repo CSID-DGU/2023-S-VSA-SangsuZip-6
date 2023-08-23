@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
-  Button,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
@@ -11,7 +10,7 @@ import {
 } from "react-native";
 import { Blue, DarkGray, LightGray } from "../style/color";
 import { useNavigation } from "@react-navigation/native";
-import { LoginApi, RegisterApi } from "../api/AuthApi";
+import { LoginApi, RegisterApi, Test } from "../api/AuthApi";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 
@@ -65,27 +64,36 @@ function Form({ isLoginPage }) {
   const loginHandler = () => {
     let loginData = {
       id,
-      password,
+      pw: password,
     };
     LoginApi(loginData).then((res) => {
-      if (res.status === 200) navigation.navigate("Alert");
-      else Alert("로그인에 실패하였습니다.");
+      if (res.data.code === 200) {
+        navigation.navigate("Alert");
+      } else if (res.data.code === 403) {
+        Alert.alert(res.data.message);
+      }
     });
   };
 
   const registerHandler = () => {
-    let registerData = {
+    const registerData = {
       id,
-      password,
+      pw: password,
       name: username,
       deviceToken: expoPushToken,
     };
-    RegisterApi(registerData).then((res) => {
-      if (res.status === 200) {
-        Alert("회원가입에 성공하였습니다!");
-        navigation.navigate("Login");
-      } else Alert("회원가입에 실패하였습니다.");
-    });
+    console.log(registerData);
+    RegisterApi(registerData)
+      .then((res) => {
+        if (res.status === 200) {
+          Alert.alert("회원가입에 성공하였습니다!");
+          navigation.navigate("Login");
+        } else Alert.alert("회원가입에 실패하였습니다.");
+      })
+      .catch((e) => {
+        console.log(e);
+        Alert.alert("오류 발생");
+      });
   };
 
   async function registerForPushNotificationsAsync() {
@@ -184,7 +192,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 10,
 
-    fontSize: "16",
+    fontSize: 16,
     fontWeight: "700",
   },
   button: {
@@ -198,8 +206,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-
-    fontSize: "16",
+    fontSize: 16,
     fontWeight: "700",
   },
   registerContainer: {

@@ -7,22 +7,32 @@ import {
   View,
 } from "react-native";
 import Checkbox from "expo-checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Blue, DarkGray, LightGray } from "../style/color";
 
-const Item = ({ category, adminName, date }) => {
+const Item = ({ id, category, date, updateSelected, datas }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [isModal, setIsModal] = useState(false);
+
+  useEffect(() => {
+    setIsChecked(false);
+  }, [datas]);
+
   const modalHandler = () => {
     setIsModal(!isModal);
   };
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+    updateSelected(id);
+  };
+
   return (
     <TouchableOpacity onPress={modalHandler}>
       <View style={styles.itemView}>
         <Text style={styles.itemText}>이상 사항</Text>
         <Checkbox
           style={styles.checkbox}
-          onValueChange={setIsChecked}
+          onValueChange={handleCheckboxChange}
           value={isChecked}
           color={isChecked ? `${Blue}` : ""}
         />
@@ -42,11 +52,6 @@ const Item = ({ category, adminName, date }) => {
                   이상행동 카테고리: {category}
                 </Text>
                 <Text style={styles.date}>{date}</Text>
-                {adminName === null ? (
-                  <></>
-                ) : (
-                  <Text style={styles.admin}>관리자 : {adminName}</Text>
-                )}
               </View>
             </Pressable>
           </View>
