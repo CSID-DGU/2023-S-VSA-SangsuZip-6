@@ -1,22 +1,31 @@
 package com.watchilderen.user;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Getter
-@Setter
+@Entity
+@Table(name="user")
+@Getter @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
+    @Id
+    @Column(name="id")
     private String id;
+
+    @Column(name="pw")
     private String pw;
+
+    @Column(name="name")
     private String name;
+
+    @Column(name="deviceToken")
     private String deviceToken;
-    private LocalDateTime create_dt;
-    private LocalDateTime update_dt;
 
 }
