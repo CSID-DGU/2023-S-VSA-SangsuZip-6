@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import splash_logo from "../assets/icon/splash_logo.png";
 
 function OnBoarding({ navigation }) {
   useEffect(() => {
