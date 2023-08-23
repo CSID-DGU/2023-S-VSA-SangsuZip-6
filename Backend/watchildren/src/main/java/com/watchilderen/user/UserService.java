@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -23,7 +24,11 @@ public class UserService {
     }
 
     public List<String> getAllDeviceTokens (){
-        return userRepository.findAllDeviceTokens();
+        List<String> deviceTokens = userRepository.findAllDeviceTokens()
+                .stream()
+                .filter(deviceToken -> deviceToken != null) // 필터링: null 값을 제외
+                .collect(Collectors.toList());
+        return deviceTokens;
     }
 }
 
