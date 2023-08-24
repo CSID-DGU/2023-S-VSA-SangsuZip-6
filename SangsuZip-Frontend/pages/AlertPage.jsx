@@ -10,6 +10,16 @@ function AlertPage() {
   const [isChecked, setIsChecked] = useState(false);
   const [abnormalDatas, setAbnormalDatas] = useState();
   const [isSelected, setIsSelected] = useState([]);
+  const [datas, setDatas] = useState({
+    data: [
+      {
+        id: "1",
+        category: "낙상",
+        date: new Date().toLocaleString("ko-KR"),
+        isChecked: false,
+      },
+    ],
+  });
 
   useEffect(() => {
     const filteredAbnormalDatas = datas.data.filter(
