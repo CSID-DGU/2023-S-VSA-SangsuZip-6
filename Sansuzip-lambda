@@ -1,0 +1,94 @@
+// AWS API GateWay로 /push/alarm 들어오도록 수정 후 구현
+
+
+const mysql = require('mysql');
+const axios = require('axios');
+
+exports.handler = async (event, context) => {
+    const response = {
+        statusCode: 200, // 기본적으로 성공 응답으로 설정
+        body: JSON.stringify('Push Alarm Serve Succeed'), // 기본적으로 성공 메시지로 설정
+    };
+    
+    // MySQL Connection 설정
+    const connection = mysql.createConnection({
+        host: '',
+        user: '',
+        password: '',
+        database: ''
+    });
+    
+    try {
+        await new Promise((resolve, reject) => {
+            connection.connect((err) => {
+                if (err) {
+                    console.error('Error connecting to MySQL:', err);
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+
+        const query = 'SELECT deviceToken FROM User';
+        const results = await new Promise((resolve, reject) => {
+            connection.query(query, (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+        
+        const recipients = results.map(result => result.deviceToken);
+
+        // Enable Axios logger at debug level
+        axios.defaults.headers.common['Accept-Encoding'] = 'gzip, deflate';
+        axios.defaults.headers.common['Accept'] = '*/*';
+        axios.defaults.headers.post['Content-Type'] = 'application/json';
+
+        let cnt = 0;
+
+        for (const recipientToken of recipients) {
+            const requestBody = {
+                to: recipientToken,
+                sound: 'default',
+                title: 'WatChildren',
+                body: '키즈 카페 내 낙상 발생',
+                data: {}
+            };
+
+            try {
+                const response = await axios.post('https://exp.host/--/api/v2/push/send', requestBody);
+
+                if (response.status !== 200) {
+                    cnt++;
+                }
+            } catch (error) {
+                cnt++;
+            }
+        }
+
+        delete axios.defaults.headers.common['Accept-Encoding'];
+        delete axios.defaults.headers.common['Accept'];
+        delete axios.defaults.headers.post['Content-Type'];
+
+        console.log('Failed push notifications:', cnt);
+        
+        // Set response based on the outcome
+        if (cnt > 0) {
+            response.statusCode = 500;
+            response.body = JSON.stringify(`Push Alarm Serve Fail. Count: ${cnt}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        response.statusCode = 500;
+        response.body = JSON.stringify('Internal Server Error');
+    } finally {
+        // Close MySQL connection
+        connection.end();
+    }
+
+    return response;
+};
